@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./Styles/Game.module.css";
 const { v4: uuidv4 } = require("uuid");
 
+
 function Game() {
   const [ready, setReady] = useState(true);
   let [cells, setCells] = useState([]);
@@ -16,15 +17,16 @@ function Game() {
   let board;
   let initialBoard = new Array(30).fill(0).map(() => new Array(50).fill(0));
 
-  function saveCells() {
-    localStorage.setItem("cells2", cells);
-    localStorage.setItem("generation", generation);
-    localStorage.setItem("active", active);
-    localStorage.getItem("generation");
-  }
+  // function saveCells() {
+  //   localStorage.setItem("cells2", cells);
+  //   localStorage.setItem("generation", generation);
+  //   localStorage.setItem("active", active);
+  //   localStorage.getItem("generation");
+  // }
 
-  const cells2 = localStorage.getItem("cells2");
-  const generation2 = localStorage.getItem("generation");
+  // const cells2 = localStorage.getItem("cells2");
+  // const generation2 = localStorage.getItem("generation");
+ 
 
   useEffect(() => {
     let interval = null;
@@ -49,7 +51,7 @@ function Game() {
     }
     return () => clearInterval(interval);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [active, generation, resetState]);
+  }, [active, resetState]);
 
 
   //Creamos un useEffect para actualizar el tiempo, 
@@ -86,6 +88,19 @@ function Game() {
       }
     }
   }, [grilla]);
+
+  //Funcion que inicializa el tablero de celulas
+  function initial() {
+    //Creamos el tablero
+    board = newCells(rows, columns);
+
+    //Iniciamos el tablero
+    startGame(board);
+
+    //Cambiamos el stado de Ready
+    setReady(false);
+
+  }
 
 
 
@@ -152,18 +167,6 @@ function Game() {
   };
 
   // ====== FUNCIONES DEL JUEGO ======
-   //Funcion que inicializa el tablero de celulas
-   function initial() {
-    //Creamos el tablero
-    board = newCells(rows, columns);
-
-    //Iniciamos el tablero
-    startGame(board, Cells);
-
-    //Cambiamos el stado de Ready
-    setReady(false);
-  }
-
   //Función para reiniciar el tablero de células
   function reset() {
     setGeneration(0);
@@ -171,7 +174,6 @@ function Game() {
     setActive(false);
     board = [];
     setCells([]);
-    localStorage.clear();
   }
 
   //Función para iniciar/detener el juego
@@ -240,7 +242,7 @@ function Game() {
           <button onClick={() => toggle()}>Iniciar</button>
           <button onClick={() => toggle()}>Detener</button>
           <button onClick={() => reset()}>Reiniciar</button>
-          <button onClick={() => saveCells()}>Guardar</button>
+          {/* <button onClick={() => saveCells()}>Guardar</button> */}
           <select
             className={styles.select}
             name="time"

@@ -25,6 +25,7 @@
     background-color: rgb(35, 190, 190);
     border: none;
     padding: 0.4rem;
+    margin: 0.4rem;
 }
 .stop {
     display: flex;
