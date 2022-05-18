@@ -13,7 +13,6 @@ function Game() {
   let [rows, setRows] = useState(30);
   let [columns, setColumns] = useState(50);
 
-
   let board;
   let initialBoard = new Array(30).fill(0).map(() => new Array(50).fill(0));
 
@@ -21,11 +20,14 @@ function Game() {
     localStorage.setItem("cells2", cells);
     localStorage.setItem("generation", generation);
     localStorage.setItem("active", active);
+    localStorage.getItem("generation");
   }
+
+  const cells2 = localStorage.getItem("cells2");
+  const generation2 = localStorage.getItem("generation");
 
   useEffect(() => {
     let interval = null;
-    // let cells2 = localStorage.getItem("cells2")
 
     if (active) {
       initial();
@@ -46,9 +48,12 @@ function Game() {
       clearInterval(interval);
     }
     return () => clearInterval(interval);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [active, generation, resetState]);
 
-  //Creamos un useEffect para actualizar el tiempo, dependiendo de lo que elija el usuario
+
+  //Creamos un useEffect para actualizar el tiempo, 
+  // dependiendo de lo que elija el usuario
   useEffect(() => {
     if (time !== "") {
       if (time === "default") {
@@ -63,34 +68,28 @@ function Game() {
     }
   }, [time]);
 
+  //Creamos un useEffect para actualizar el tamaño de las grillas, 
+  // dependiendo de lo que elija el usuario
   useEffect(() => {
     if (grilla !== "") {
       if (grilla === "default") {
-        setRows(30)
-        setColumns(50)
+        setRows(30);
+        setColumns(50);
       }
       if (grilla === "60X40") {
-        setRows(40)
-        setColumns(60)
+        setRows(40);
+        setColumns(60);
       }
       if (grilla === "70X50") {
-        setRows(50)
-        setColumns(70)
+        setRows(50);
+        setColumns(70);
       }
     }
   }, [grilla]);
 
-  function initial() {
-    //Creamos el tablero
-    board = newCells(rows, columns);
 
-    //Iniciamos el tablero
-    startGame(board);
 
-    //Cambiamos el stado de Ready
-    setReady(false);
-  }
-
+  //====== CÉLULAS ======
   // Objeto de Células(Le pasamos por parametro sus condenadas, y su estado)
   const Cells = function (x, y, state) {
     //Cordenadas
@@ -152,7 +151,35 @@ function Game() {
     };
   };
 
-  //Exportar luego
+  // ====== FUNCIONES DEL JUEGO ======
+   //Funcion que inicializa el tablero de celulas
+   function initial() {
+    //Creamos el tablero
+    board = newCells(rows, columns);
+
+    //Iniciamos el tablero
+    startGame(board, Cells);
+
+    //Cambiamos el stado de Ready
+    setReady(false);
+  }
+
+  //Función para reiniciar el tablero de células
+  function reset() {
+    setGeneration(0);
+    setReady(true);
+    setActive(false);
+    board = [];
+    setCells([]);
+    localStorage.clear();
+  }
+
+  //Función para iniciar/detener el juego
+  function toggle() {
+    setActive(!active);
+  }
+
+  //Función que calcula los proximos estados
   function drawBoard(board) {
     //Calculamos el siguiente ciclo
     for (let y = 0; y < rows; y++) {
@@ -169,7 +196,6 @@ function Game() {
     }
   }
 
-
   //Creamos el array de Celulas
   function newCells(r, c) {
     //Creamos un array
@@ -181,7 +207,8 @@ function Game() {
 
     return cells;
   }
-
+  
+  //Función que llena el tablero de celulas
   function startGame(board) {
     let state;
 
@@ -202,17 +229,9 @@ function Game() {
       }
     }
   }
-  function reset() {
-    setGeneration(0);
-    setReady(true);
-    setActive(false);
-    board = [];
-    setCells([]);
-  }
+// ================================
 
-  function toggle() {
-    setActive(!active);
-  }
+
 
   return (
     <div>
@@ -258,12 +277,9 @@ function Game() {
           </div>
         </div>
       ) : (
-        
         <div>
           <div className={styles.board}>
-            {
-              
-            cells?.map((row) => (
+            {cells?.map((row) => (
               <div key={row[0].id} className={styles.play}>
                 {row.map((cell, i) => (
                   <div

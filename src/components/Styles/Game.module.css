@@ -26,15 +26,6 @@
     border: none;
     padding: 0.4rem;
 }
-
-
-
-.board {
-    position: relative;
-    max-width: min-content;
-    margin: 0 auto;
-}
-
 .stop {
     display: flex;
     justify-content: center;
