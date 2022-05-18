@@ -1,0 +1,65 @@
+.nav {
+    display: flex;
+    justify-content: space-between;
+    width: 700px;
+    height: 200px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2rem;
+    margin-bottom: -7rem;
+}
+.nav button{
+    margin: 0.5rem;
+    color: white;
+    background-color: rgb(35, 190, 190);
+    border: none;
+    padding: 0.3rem;
+    width: 6rem;
+}
+.nav button:hover{
+    cursor: pointer;
+    background-color: rgb(31, 154, 154);
+}
+.select{
+    color: white;
+    background-color: rgb(35, 190, 190);
+    border: none;
+    padding: 0.4rem;
+}
+
+
+
+.board {
+    position: relative;
+    max-width: min-content;
+    margin: 0 auto;
+}
+
+.stop {
+    display: flex;
+    justify-content: center;
+}
+.play {
+    display: flex;
+    justify-content: center;
+}
+.cells_alive{
+    width: 10px;
+    height: 10px;
+    border: 1px solid rgb(69, 69, 69);
+    border-radius: 50%;
+    margin: 0.2rem;
+    display: flex;
+    flex-direction: row;
+    background-color: rgb(117, 193, 244);
+}
+.cells_dead{
+    width: 10px;
+    height: 10px;
+    border: 1px solid rgb(69, 69, 69);
+    border-radius: 50%;
+    margin: 0.2rem;
+    display: flex;
+    flex-direction: row;
+    background-color: white;
+}
