@@ -74,8 +74,6 @@ function Game() {
     setGeneration(0);
     setReady(true);
     setActive(false);
-    board = [];
-    setCells([]);
     setIniciar(false);
   }
 
