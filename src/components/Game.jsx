@@ -2,59 +2,66 @@ import React, { useEffect, useState } from "react";
 import styles from "./Styles/Game.module.css";
 const { v4: uuidv4 } = require("uuid");
 
-
 function Game() {
   const [ready, setReady] = useState(true);
   let [cells, setCells] = useState([]);
   let [generation, setGeneration] = useState(0);
+  let [play, setPlay] = useState(false);
+  let [iniciar, setIniciar] = useState(false);
   let [active, setActive] = useState(false);
   let [resetState, setResetState] = useState(false);
   let [time, setTime] = useState(3);
   let [grilla, setGrilla] = useState("");
   let [rows, setRows] = useState(30);
   let [columns, setColumns] = useState(50);
+  let [board, setBoard] = useState([]);
 
-  let board;
   let initialBoard = new Array(30).fill(0).map(() => new Array(50).fill(0));
+  
+    
 
-  // function saveCells() {
-  //   localStorage.setItem("cells2", cells);
-  //   localStorage.setItem("generation", generation);
-  //   localStorage.setItem("active", active);
-  //   localStorage.getItem("generation");
-  // }
-
-  // const cells2 = localStorage.getItem("cells2");
-  // const generation2 = localStorage.getItem("generation");
- 
 
   useEffect(() => {
     let interval = null;
+    if (play) {
+      initial()
+    }
 
     if (active) {
-      initial();
-      setResetState(false);
       interval = setInterval(() => {
         drawBoard(board);
         setCells(board);
+        
         setGeneration((generation) => ++generation);
       }, time * 1000);
     }
-    if (!active) {
-      setResetState(false);
-      clearInterval(interval);
-    }
+
 
     if (resetState) {
       reset();
       clearInterval(interval);
     }
     return () => clearInterval(interval);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [active, resetState]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [active, resetState, play]);
 
+  //Función para iniciar/detener el juego
+  function toggle() {
+    setActive(!active);
+    setPlay(!play)
+  }
+  function toggle2() {
+    setActive(!active);
+    //Cambiamos el stado de Ready
+    setReady(false);
 
-  //Creamos un useEffect para actualizar el tiempo, 
+    setIniciar(true)
+
+    setPlay(true)
+  }
+ 
+
+  //Creamos un useEffect para actualizar el tiempo,
   // dependiendo de lo que elija el usuario
   useEffect(() => {
     if (time !== "") {
@@ -70,7 +77,7 @@ function Game() {
     }
   }, [time]);
 
-  //Creamos un useEffect para actualizar el tamaño de las grillas, 
+  //Creamos un useEffect para actualizar el tamaño de las grillas,
   // dependiendo de lo que elija el usuario
   useEffect(() => {
     if (grilla !== "") {
@@ -90,19 +97,13 @@ function Game() {
   }, [grilla]);
 
   //Funcion que inicializa el tablero de celulas
-  function initial() {
+  async function initial() {
     //Creamos el tablero
     board = newCells(rows, columns);
 
     //Iniciamos el tablero
-    startGame(board);
-
-    //Cambiamos el stado de Ready
-    setReady(false);
-
+    await startGame(board);
   }
-
-
 
   //====== CÉLULAS ======
   // Objeto de Células(Le pasamos por parametro sus condenadas, y su estado)
@@ -174,11 +175,7 @@ function Game() {
     setActive(false);
     board = [];
     setCells([]);
-  }
-
-  //Función para iniciar/detener el juego
-  function toggle() {
-    setActive(!active);
+    setIniciar(false)
   }
 
   //Función que calcula los proximos estados
@@ -209,7 +206,7 @@ function Game() {
 
     return cells;
   }
-  
+
   //Función que llena el tablero de celulas
   function startGame(board) {
     let state;
@@ -231,18 +228,20 @@ function Game() {
       }
     }
   }
-// ================================
-
-
+  // ================================
+ 
 
   return (
     <div>
       <div className={styles.nav}>
         <div>
-          <button onClick={() => toggle()}>Iniciar</button>
-          <button onClick={() => toggle()}>Detener</button>
+          <button disabled={iniciar} onClick={() => toggle2()}>
+            Iniciar
+          </button>
+          <button onClick={() => toggle()}>
+            {active ? "Detener" : "Reanudar"}
+          </button>
           <button onClick={() => reset()}>Reiniciar</button>
-          {/* <button onClick={() => saveCells()}>Guardar</button> */}
           <select
             className={styles.select}
             name="time"
@@ -269,8 +268,8 @@ function Game() {
       {ready ? (
         <div>
           <div className={styles.board}>
-            {initialBoard?.map((row) => (
-              <div key={row[0].id} className={styles.stop}>
+            {initialBoard?.map((row, i) => (
+              <div key={i} className={styles.stop}>
                 {row.map((cell, i) => (
                   <div key={i} className={styles.cells_dead}></div>
                 ))}

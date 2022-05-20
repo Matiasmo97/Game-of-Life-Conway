@@ -20,6 +20,10 @@
     cursor: pointer;
     background-color: rgb(31, 154, 154);
 }
+.nav button:disabled{
+    cursor: pointer;
+    background-color: rgb(29, 128, 128);
+}
 .select{
     color: white;
     background-color: rgb(35, 190, 190);
