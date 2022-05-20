@@ -40,6 +40,11 @@ function Game() {
       }
     }
 
+    if (resetState) {
+      reset()
+      clearInterval(interval)
+    }
+
 
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -74,6 +79,9 @@ function Game() {
     setGeneration(0);
     setReady(true);
     setActive(false);
+    board = []
+    setCells([])
+    setPause(false)
     setIniciar(false);
   }
 
@@ -240,6 +248,7 @@ function Game() {
           </button>
           <button onClick={() => reset()}>Reiniciar</button>
           <select
+          disabled={iniciar}
             className={styles.select}
             name="time"
             onChange={(e) => setTime(e.target.value)}
@@ -249,6 +258,7 @@ function Game() {
             <option value="10segundos">10 segundos</option>
           </select>
           <select
+          disabled={iniciar}
             className={styles.select}
             name="grilla"
             onChange={(e) => setGrilla(e.target.value)}

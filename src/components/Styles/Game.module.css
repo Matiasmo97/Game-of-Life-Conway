@@ -31,6 +31,10 @@
     padding: 0.4rem;
     margin: 0.4rem;
 }
+.select:disabled{
+    cursor: pointer;
+    background-color: rgb(18, 87, 87);
+}
 .stop {
     display: flex;
     justify-content: center;
