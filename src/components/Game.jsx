@@ -40,6 +40,7 @@ function Game() {
       }
     }
 
+
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [active, resetState, play, pause]);
