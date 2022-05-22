@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import InitialBoard from "./InitialBoard";
+import Nav from "./Nav";
 import styles from "./Styles/Game.module.css";
 const { v4: uuidv4 } = require("uuid");
 
@@ -16,14 +18,10 @@ function Game() {
   let [columns, setColumns] = useState(50);
   let [pause, setPause] = useState(false);
   let board;
-
-  let initialBoard = new Array(30).fill(0).map(() => new Array(50).fill(0));
+  
 
   useEffect(() => {
     let interval = null;
-    if (play) {
-      initial();
-    }
 
     if (active) {
       if (pause) {
@@ -32,6 +30,7 @@ function Game() {
           setGeneration((generation) => ++generation);
         }, time * 1000);
       } else {
+        initial();
         interval = setInterval(() => {
           drawBoard(board);
           setCells(board);
@@ -41,10 +40,9 @@ function Game() {
     }
 
     if (resetState) {
-      reset()
-      clearInterval(interval)
+      reset();
+      clearInterval(interval);
     }
-
 
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -60,12 +58,12 @@ function Game() {
   }
 
   //Función para iniciar/detener el juego
-  function toggle() {
+  function toggle2() {
     setActive(!active);
     setPlay(true);
     setPause(true);
   }
-  function toggle2() {
+  function toggle() {
     setActive(!active);
     //Cambiamos el stado de Ready
     setReady(false);
@@ -79,9 +77,10 @@ function Game() {
     setGeneration(0);
     setReady(true);
     setActive(false);
-    board = []
-    setCells([])
-    setPause(false)
+    setPlay(false);
+    board = [];
+    setCells([]);
+    setPause(false);
     setIniciar(false);
   }
 
@@ -183,6 +182,7 @@ function Game() {
       };
     }
   }
+  // =====================
 
   // ====== FUNCIONES DEL JUEGO ======
   //Función que calcula los proximos estados
@@ -236,54 +236,22 @@ function Game() {
     }
   }
   // ================================
+
   return (
     <div>
-      <div className={styles.nav}>
-        <div>
-          <button disabled={iniciar} onClick={() => toggle2()}>
-            Iniciar
-          </button>
-          <button onClick={() => toggle()}>
-            {active ? "Detener" : "Reanudar"}
-          </button>
-          <button onClick={() => reset()}>Reiniciar</button>
-          <select
-          disabled={iniciar}
-            className={styles.select}
-            name="time"
-            onChange={(e) => setTime(e.target.value)}
-          >
-            <option value="default">3 segundos</option>
-            <option value="5segundos">5 segundos</option>
-            <option value="10segundos">10 segundos</option>
-          </select>
-          <select
-          disabled={iniciar}
-            className={styles.select}
-            name="grilla"
-            onChange={(e) => setGrilla(e.target.value)}
-          >
-            <option value="default">50 X 30</option>
-            <option value="60X40">60 X 40</option>
-            <option value="70X50">70 X 50</option>
-          </select>
-        </div>
-        <div>
-          <span>Generation #{generation}</span>
-        </div>
-      </div>
+      <Nav
+        active={active}
+        play={play}
+        iniciar={iniciar}
+        toggle={toggle}
+        toggle2={toggle2}
+        reset={reset}
+        setTime={setTime}
+        setGrilla={setGrilla}
+        generation={generation}
+      />
       {ready ? (
-        <div>
-          <div className={styles.board}>
-            {initialBoard?.map((row, i) => (
-              <div key={i} className={styles.stop}>
-                {row.map((cell, i) => (
-                  <div key={i} className={styles.cells_dead}></div>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
+        <InitialBoard />
       ) : (
         <div>
           <div className={styles.board}>
