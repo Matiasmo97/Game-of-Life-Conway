@@ -11,6 +11,8 @@ function Nav({
   setGrilla,
   generation,
   play,
+  setPattern,
+  pattern
 }) {
   return (
     <div className={styles.nav}>
@@ -35,7 +37,7 @@ function Nav({
           <option value="10segundos">10 segundos</option>
         </select>
         <select
-          disabled={iniciar}
+          disabled={iniciar || pattern !== ""}
           className={styles.select}
           name="grilla"
           onChange={(e) => setGrilla(e.target.value)}
@@ -44,6 +46,16 @@ function Nav({
           <option value="60X40">60 X 40</option>
           <option value="70X50">70 X 50</option>
         </select>
+        <select
+        disabled={iniciar}
+        className={styles.select}
+        name="grilla"
+        onChange={(e) => setPattern(e.target.value)}
+      >
+        <option value="default">Selecciona un patrón</option>
+        <option value="lineal">Lineal</option>
+        <option value="lineal2">Lineal 2</option>
+      </select>
       </div>
       <div>
         <span>Generation #{generation}</span>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import InitialBoard from "./InitialBoard";
 import Nav from "./Nav";
 import styles from "./Styles/Game.module.css";
+import { pattern1, pattern2 } from "../utils/patterns";
 const { v4: uuidv4 } = require("uuid");
 
 function Game() {
@@ -14,11 +15,12 @@ function Game() {
   let [resetState] = useState(false);
   let [time, setTime] = useState(3);
   let [grilla, setGrilla] = useState("");
+  let [pattern, setPattern] = useState("");
+  let [patternAct, setAtternAct] = useState("");
   let [rows, setRows] = useState(30);
   let [columns, setColumns] = useState(50);
   let [pause, setPause] = useState(false);
   let board;
-  
 
   useEffect(() => {
     let interval = null;
@@ -27,6 +29,11 @@ function Game() {
       if (pause) {
         interval = setInterval(() => {
           drawBoard(cells);
+          setGeneration((generation) => ++generation);
+        }, time * 1000);
+      } else if (patternAct) {
+        interval = setInterval(() => {
+          drawPattern(cells);
           setGeneration((generation) => ++generation);
         }, time * 1000);
       } else {
@@ -59,9 +66,13 @@ function Game() {
 
   //Función para iniciar/detener el juego
   function toggle2() {
-    setActive(!active);
-    setPlay(true);
-    setPause(true);
+    if(pattern){
+      setActive(!active);
+    } else {
+      setActive(!active);
+      setPlay(true);
+      setPause(true);
+     }
   }
   function toggle() {
     setActive(!active);
@@ -82,6 +93,8 @@ function Game() {
     setCells([]);
     setPause(false);
     setIniciar(false);
+    setPattern("");
+    setAtternAct(false);
   }
 
   //Creamos un useEffect para actualizar el tiempo,
@@ -99,6 +112,25 @@ function Game() {
       }
     }
   }, [time]);
+
+  //Creamos un useEffect para actualizar el patrón,
+  // dependiendo de lo que elija el usuario
+  useEffect(() => {
+    if (pattern !== "") {
+      if (pattern === "default") {
+        setPattern("");
+        setAtternAct(false);
+      }
+      if (pattern === "lineal") {
+        setCells(pattern1);
+        setAtternAct(true);
+      }
+      if (pattern === "lineal2") {
+        setCells(pattern2);
+        setAtternAct(true);
+      }
+    }
+  }, [pattern]);
 
   //Creamos un useEffect para actualizar el tamaño de las grillas,
   // dependiendo de lo que elija el usuario
@@ -235,6 +267,19 @@ function Game() {
       }
     }
   }
+
+  //Función para pintar los patrones adicionales
+  function drawPattern(obj) {
+    for (let y = 0; y < rows; y++) {
+      for (let x = 0; x < columns; x++) {
+        if (obj[y][x].condition === 1) {
+          obj[y][x].condition = 0;
+        } else {
+          obj[y][x].condition = 1;
+        }
+      }
+    }
+  }
   // ================================
 
   return (
@@ -249,6 +294,8 @@ function Game() {
         setTime={setTime}
         setGrilla={setGrilla}
         generation={generation}
+        setPattern={setPattern}
+        pattern={pattern}
       />
       {ready ? (
         <InitialBoard />
